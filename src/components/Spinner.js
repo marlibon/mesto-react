@@ -1,9 +1,8 @@
 import React from "react";
 
-function Spinner() {
+function Spinner () {
   return (
     <div className="spinner"><i /></div>
-
   );
 }
 

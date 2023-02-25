@@ -6,7 +6,6 @@ class Api {
 
   _getResponseData = res =>  res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
   
-
   getInitialCards = () => {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,

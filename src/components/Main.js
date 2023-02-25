@@ -1,32 +1,22 @@
-import React from "react";
+import {useEffect, useState} from 'react';
 import imageLoading from "../images/loading.gif";
 import Spinner from "./Spinner";
 import { api } from "../utils/api";
 import Card from "./Card";
 
-function Main ({onEditAvatar, onEditProfile, onAddPlace, onCardClick}) {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('загрузка...');
-  const [userAvatar, setUserAvatar] = React.useState(imageLoading);
-  const [cards, setCards] = React.useState([]);
+function Main ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('загрузка...');
+  const [userAvatar, setUserAvatar] = useState(imageLoading);
+  const [cards, setCards] = useState([]);
 
-  React.useEffect(() => {
-    api.getUserInfo()
-      .then((userData) => {
+  useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cardsFromServer]) => {
         setUserName(userData.name);
         setUserDescription(userData.about);
         setUserAvatar(userData.avatar);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => { });
-  }, []);
-
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then((cardsFromServer) => {
         setCards(cardsFromServer);
       })
       .catch((error) => {
@@ -34,6 +24,7 @@ function Main ({onEditAvatar, onEditProfile, onAddPlace, onCardClick}) {
       })
       .finally(() => setIsLoading(false));
   }, []);
+
   return (
     <main className="main page__content">
       <section className="profile">
@@ -51,13 +42,8 @@ function Main ({onEditAvatar, onEditProfile, onAddPlace, onCardClick}) {
       <section className="elements">
         {isLoading
           ? (<Spinner />)
-          : (
-            cards.map((props, index) => <Card onCardClick={onCardClick} key={`${++index}.${props._id}`} {...props}  />)
-          )
-
-
+          : ( cards.map(({_id, ...props}) => <Card onCardClick={onCardClick} key={_id} {...props} />) )
         }
-
       </section>
     </main>
 
