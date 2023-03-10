@@ -4,7 +4,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Card from "./Card";
 
 function Main ({ cards, onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete, onLoading }) {
-  const { name, about, avatar, _id } = useContext(CurrentUserContext);
+  const { name, about, avatar } = useContext(CurrentUserContext);
   return (
     <main className="main page__content">
       <section className="profile">

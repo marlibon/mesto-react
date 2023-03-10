@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
+import Popup from './Popup';
 
 function PopupWithForm (props) {
-  const { name, title, textButton, isOpen, onClose, children, onSubmit, isLoading, onClickByOverlay, onState } = props;
+  const { name, title, textButton, isOpen, onClose, children, onSubmit, isLoading, onState } = props;
   const [stateButtonSubmit, setStateButtonSubmit] = useState(onState);
-
   function onChangeValidation (e) {
     const currentInput = e.target;
     const errorContainer = currentInput.nextSibling;
@@ -28,16 +28,27 @@ function PopupWithForm (props) {
     onSubmit(e)
   }
   return (
-    <section className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`} onClick={onClickByOverlay}>
+    <Popup name={name} isOpen={isOpen} onClose={onClose}>
       <div className="popup__container">
         <button type="button" className="popup__close" onClick={onClose} />
         <h3 className="popup__title">{title}</h3>
-        <form name={`form_${name}`} action="/" className={`form form_${name}`} onSubmit={handleSubmit} onChange={onChangeValidation}>
+        <form
+          name={`form_${name}`}
+          action="/"
+          className={`form form_${name}`}
+          onSubmit={handleSubmit}
+          onChange={onChangeValidation}
+        >
           {children}
-          <button type="submit" name="form__submit" className={`form__submit ${!stateButtonSubmit && "form__submit_disable"}`} disabled={!stateButtonSubmit}>{isLoading ? "обработка..." : textButton}</button>
+          <button
+            type="submit"
+            name="form__submit"
+            className={`form__submit ${!stateButtonSubmit && "form__submit_disable"}`}
+            disabled={!stateButtonSubmit}>{isLoading ? "обработка..." : textButton}
+          </button>
         </form>
       </div>
-    </section>
+    </Popup>
   );
 }
 

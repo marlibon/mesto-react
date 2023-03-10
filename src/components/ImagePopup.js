@@ -1,9 +1,10 @@
 import React from "react";
+import Popup from './Popup';
 
-function ImagePopup ({ card, isOpen, onClose, onClickByOverlay }) {
+function ImagePopup ({ card, isOpen, onClose }) {
 
     return (
-        <section className={`popup popup_type_view-image ${isOpen && 'popup_opened'}`} onClick={onClickByOverlay}>
+        <Popup name="view-image" isOpen={isOpen} onClose={onClose}>
             <div className="popup__container popup__container_image">
                 <button type="button" className="popup__close" onClick={onClose} />
                 <figure className="popup__fig">
@@ -11,7 +12,7 @@ function ImagePopup ({ card, isOpen, onClose, onClickByOverlay }) {
                     <figcaption className="popup__description" >{card?.name}</figcaption>
                 </figure>
             </div>
-        </section>
+        </Popup>
     );
 }
 

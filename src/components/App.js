@@ -25,12 +25,7 @@ function App () {
   const [selectedCard, setSelectedCard] = React.useState({ name: 'загрузка', link: imageLoading });
   const [currentUser, setСurrentUser] = React.useState({ name: 'загрузка...', about: 'загрузка...', avatar: imageLoading, _id: '' });
   const [cards, setCards] = useState([]);
-  const statesPopups = [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isImagePopupOpen, isConfirmDeletePopupOpen]
 
-  /**
-   2. github Pages
-   3. валидация
-   */
   function handleEditProfileClick () {
     setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
   }
@@ -67,11 +62,11 @@ function App () {
       .then(() => {
         const newArrCards = cards.filter((item) => item._id !== _id);
         setCards(newArrCards);
+        closeAllPopups();
       })
       .catch((error) => console.error(error))
       .finally(() => {
         setIsLoading(false);
-        closeAllPopups();
       })
   }
 
@@ -80,44 +75,39 @@ function App () {
     api.patchUserInfo(name, about)
       .then(({ name, about, avatar, _id }) => {
         setСurrentUser({ name, about, avatar, _id });
+        closeAllPopups();
       })
       .catch((error) => console.error(error))
       .finally(() => {
         setIsLoading(false);
-        closeAllPopups();
       })
   }
   function handleAddPlaceSubmit ({ title, url }) {
     setIsLoading(true);
     api.addCard(title, url)
       .then((newCard) => {
-        setCards([...cards, newCard])
+        setCards([newCard, ...cards]);
+        closeAllPopups();
       })
       .catch((error) => console.error(error))
       .finally(() => {
         setIsLoading(false);
-        closeAllPopups();
       });
-
   }
 
   function handleUpdateAvatar ({ avatar }) {
     setIsLoading(true);
     api.replaceAvatar(avatar)
       .then(({ avatar }) => {
-        const { name, about, _id } = currentUser
-        setСurrentUser({ name, about, avatar, _id });
+        setСurrentUser({ ...currentUser, avatar });
+        closeAllPopups();
       })
       .catch((error) => console.error(error))
       .finally(() => {
         setIsLoading(false);
-        closeAllPopups();
       })
   }
-  function handleClickByOverlay (e) {
-    e.currentTarget === e.target && closeAllPopups()
 
-  }
   function closeAllPopups () {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -139,32 +129,51 @@ function App () {
       .finally(() => setIsLoadingCards(false));
   }, []);
 
-  useEffect(() => {
-    function handleKeyEsc (e) {
-      e.key === 'Escape' && closeAllPopups()
-    }
-    statesPopups.some(state => state === true) && document.addEventListener('keydown', handleKeyEsc);
-
-    return () => document.removeEventListener('keydown', handleKeyEsc)
-  }, [statesPopups])
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page'>
         <Header />
-        <Main cards={cards} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleConfirmCardDelete} onLoading={isLoadingCards} />
+        <Main
+          cards={cards}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleConfirmCardDelete}
+          onLoading={isLoadingCards}
+        />
         <Footer />
-
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoading} onClickByOverlay={handleClickByOverlay} />
-
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isLoading={isLoading} onClickByOverlay={handleClickByOverlay} />
-
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} isLoading={isLoading} onUpdateAvatar={handleUpdateAvatar} onClickByOverlay={handleClickByOverlay} />
-
-        <ConfirmDeletePopup isOpen={isConfirmDeletePopupOpen} onClose={closeAllPopups} isLoading={isLoading} onCardDelete={handleCardDelete} onFutureDeletedCard={futureDeletedCard} onClickByOverlay={handleClickByOverlay} />
-
-        <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} onClickByOverlay={handleClickByOverlay} />
-
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+          isLoading={isLoading}
+        />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+          isLoading={isLoading}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          isLoading={isLoading}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <ConfirmDeletePopup
+          isOpen={isConfirmDeletePopupOpen}
+          onClose={closeAllPopups}
+          isLoading={isLoading}
+          onCardDelete={handleCardDelete}
+          onFutureDeletedCard={futureDeletedCard}
+        />
+        <ImagePopup
+          isOpen={isImagePopupOpen}
+          onClose={closeAllPopups}
+          card={selectedCard}
+        />
       </div>
     </CurrentUserContext.Provider>
 

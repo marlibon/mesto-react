@@ -6,7 +6,6 @@ const EditProfilePopup = (props) => {
     const currentUser = useContext(CurrentUserContext);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-
     useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about);
@@ -29,11 +28,45 @@ const EditProfilePopup = (props) => {
     }
 
     return (
-        <PopupWithForm name="edit" title="Редактировать профиль" textButton="Сохранить" {...props} onSubmit={handleSubmit} onState={false}>
-            <input type="text" placeholder="Имя" className="form__input form__input_name" name="name" id="name" minLength={2} maxLength={40} onChange={handleChangeName} value={name} required />
-            <span className="form__error name-error" id="name-error" />
-            <input type="text" placeholder="Род деятельности" className="form__input form__input_about" name="about" id="about" minLength={2} maxLength={200} onChange={handleChangeDecription} value={description} required />
-            <span className="form__error about-error" id="about-error" />
+        <PopupWithForm
+            name="edit"
+            title="Редактировать профиль"
+            textButton="Сохранить"
+            {...props}
+            onSubmit={handleSubmit}
+            onState={false}
+        >
+            <input
+                type="text"
+                placeholder="Имя"
+                className="form__input form__input_name"
+                name="name" id="name"
+                minLength={2}
+                maxLength={40}
+                onChange={handleChangeName}
+                value={name}
+                required
+            />
+            <span
+                className="form__error name-error"
+                id="name-error"
+            />
+            <input
+                type="text"
+                placeholder="Род деятельности"
+                className="form__input form__input_about"
+                name="about"
+                id="about"
+                minLength={2}
+                maxLength={200}
+                onChange={handleChangeDecription}
+                value={description}
+                required
+            />
+            <span
+                className="form__error about-error"
+                id="about-error"
+            />
         </PopupWithForm>
     )
 }
