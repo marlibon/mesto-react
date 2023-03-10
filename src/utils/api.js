@@ -4,19 +4,19 @@ class Api {
     this._headers = options.headers;
   }
 
-  _getResponseData = res =>  res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
-  
-  getInitialCards = () => {
+  _getResponseData = res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+
+  getCardList = () => {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 
   getUserInfo = () => {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 
   patchUserInfo = (name, about) => {
     return fetch(`${this._baseUrl}/users/me`, {
@@ -26,8 +26,8 @@ class Api {
         name,
         about,
       }),
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 
   addCard = (name, link) => {
     return fetch(`${this._baseUrl}/cards`, {
@@ -37,23 +37,23 @@ class Api {
         name: name,
         link: link,
       }),
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 
   removeCard = (id) => {
     return fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
       headers: this._headers,
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 
   setLike = (id, value) => {
     value = value ? "DELETE" : "PUT";
     return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: `${value}`,
       headers: this._headers,
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 
   replaceAvatar = (avatar) => {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
@@ -62,8 +62,8 @@ class Api {
       body: JSON.stringify({
         avatar,
       }),
-    }).then(this._getResponseData)
-  }
+    }).then(this._getResponseData);
+  };
 }
 // создание экземпляра подключения к серверу
 export const api = new Api({
